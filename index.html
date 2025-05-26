@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفاهيم الفيزياء الإحصائية التفاعلية (كامل)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .concept-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 16px rgba(0, 77, 153, 0.1);
+            border-left: 6px solid #2563eb;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .concept-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 77, 153, 0.15);
+        }
+        .mental-link {
+            background-color: #e0f2fe;
+            border: 1px dashed #38bdf8;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .visualization-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px; /* Adjusted height */
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 15px; /* Adjusted padding */
+            margin-top: 16px;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+        }
+        h1, h2, h3 {
+            color: #0f172a;
+        }
+        h2 { font-weight: 900; }
+        h3 { font-weight: 700; }
+        .latex-formula {
+            background-color: #eef2ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .parameters-explanation {
+            background-color: #fdf2f8;
+            border: 1px solid #fbcfe8;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        .parameters-explanation ul {
+            list-style-type: none;
+            padding-right: 0;
+        }
+        .parameters-explanation li {
+            margin-bottom: 6px;
+        }
+        .parameters-explanation strong {
+            color: #be185d;
+        }
+
+        /* Animation specific styles from previous version */
+        .boltzmann-bars-container { display: flex; align-items: flex-end; justify-content: space-around; width: 80%; height: 100px; border-bottom: 2px solid #94a3b8; position: relative; }
+        .boltzmann-bar { width: 15%; background-color: #3b82f6; transition: height 0.5s ease-out; position: relative; }
+        .boltzmann-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; color: #475569; }
+        .partition-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; justify-content: center; }
+        .partition-option { padding: 8px 12px; background-color: #10b981; color: white; border-radius: 6px; font-size: 0.9rem; opacity: 0; transform: translateY(10px); animation: fadeInOption 0.5s forwards; }
+        @keyframes fadeInOption { to { opacity: 1; transform: translateY(0); } }
+        .energy-collector { width: 100px; height: 100px; border: 3px dashed #f59e0b; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: #d97706; position: relative; overflow: hidden; }
+        .energy-packet { width: 15px; height: 15px; background-color: #ec4899; border-radius: 50%; position: absolute; animation: collectEnergy 1.5s ease-in-out forwards; }
+        @keyframes collectEnergy { 0% { opacity: 1; transform: translate(var(--start-x), var(--start-y)) scale(1); } 80% { opacity: 1; transform: translate(0,0) scale(1.2); } 100% { opacity: 0; transform: translate(0,0) scale(0.5); } }
+        
+        /* Simple gas particle animation */
+        .gas-container { width: 100%; height: 100px; background-color: #e0f2fe; border: 1px solid #7dd3fc; position: relative; }
+        .gas-particle { width: 8px; height: 8px; background-color: #0ea5e9; border-radius: 50%; position: absolute; }
+
+        /* Fermi-Dirac / Bose-Einstein occupation animation */
+        .level-occupation-container { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%; }
+        .energy-level { display: flex; align-items: center; justify-content: center; gap: 3px; border: 1px solid #ccc; padding: 5px; border-radius: 4px; width: 80%; min-height: 25px; }
+        .particle-slot { width: 15px; height: 15px; border: 1px dashed #999; display: flex; align-items: center; justify-content: center; }
+        .fd-particle { width: 12px; height: 12px; background-color: #8b5cf6; border-radius: 50%; } /* Purple for Fermions */
+        .be-particle { width: 12px; height: 12px; background-color: #10b981; border-radius: 50%; } /* Green for Bosons */
+        .level-label { font-size: 0.8rem; color: #555; margin-bottom: 2px; }
+
+    </style>
+</head>
+<body class="p-4 sm:p-8 md:p-12">
+    <header class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-black">تحدي الفيزياء الإحصائية التفاعلي (كامل)</h1>
+        <p class="text-lg sm:text-xl text-slate-600 mt-3">شرح المفاهيم الأساسية مع رسوم متحركة بسيطة</p>
+    </header>
+
+    <div id="definitions-container">
+        </div>
+
+    <script>
+        const definitionsData = [
+            // Definitions 1-5 (from previous response, with minor text adjustments if needed)
+            {
+                id: "mb-probability",
+                title: "1. توزيع احتمالية ماكسويل-بولتزمان (Probability distribution of Maxwell-Boltzmann)",
+                definition: "هو توزيع يصف احتمالية العثور على جسيم (في نظام غازي مثالي عند توازن حراري) في حالة طاقة معينة (Energy State) E. الاحتمالية تقل بشكل أسي مع زيادة الطاقة.",
+                relation: "$$ P(E_i) = \\frac{g_i e^{-E_i/kT}}{Z} $$",
+                parameters: [
+                    { symbol: "$P(E_i)$", explanation: "احتمالية أن يكون الجسيم في مستوى الطاقة $E_i$." },
+                    { symbol: "$g_i$", explanation: "عدد الحالات الكمومية (Degeneracy) عند مستوى الطاقة $E_i$. أي كم طريقة مختلفة يمكن للجسيم أن يمتلك بها نفس الطاقة $E_i$." },
+                    { symbol: "$e^{-E_i/kT}$", explanation: "عامل بولتزمان، ويمثل الاحتمالية النسبية لإشغال مستوى الطاقة $E_i$." },
+                    { symbol: "$E_i$", explanation: "طاقة المستوى $i$." },
+                    { symbol: "$k$", explanation: "ثابت بولتزمان ($1.38 \\times 10^{-23} \\text{ J/K}$)." },
+                    { symbol: "$T$", explanation: "درجة الحرارة المطلقة (بالكلفن)." },
+                    { symbol: "$Z$", explanation: "دالة التجزئة للنظام." }
+                ],
+                analogy_title: "🧠 الربط الذهني: موقف السيارات متعدد الطوابق",
+                analogy_text: "تخيل أن الجسيمات هي سيارات تبحث عن أماكن للوقوف في مبنى مواقف ضخم (النظام)، وكل طابق له 'تكلفة' مختلفة (الطاقة). الطابق الأرضي (أقل طاقة) هو الأرخص والأسهل، لذلك ستجد معظم السيارات متكدسة فيه. كلما صعدت للطوابق الأعلى (طاقة أعلى)، تصبح 'التكلفة' أغلى، فتقل أعداد السيارات بشكل كبير.",
+                visualization_html: `
+                    <div class="w-full text-center mb-2 text-sm text-slate-500">انقر لتحديث توزيع الجسيمات (محاكاة)</div>
+                    <div id="mb-bars" class="boltzmann-bars-container">
+                        <div class="boltzmann-bar" style="height: 80%;"><span>E1 (قليلة)</span></div>
+                        <div class="boltzmann-bar" style="height: 50%;"><span>E2</span></div>
+                        <div class="boltzmann-bar" style="height: 20%;"><span>E3</span></div>
+                        <div class="boltzmann-bar" style="height: 5%;"><span>E4 (عالية)</span></div>
+                    </div>
+                    <p class="mt-3 text-xs text-slate-500">الأعمدة تمثل احتمالية إشغال مستويات الطاقة المختلفة.</p>
+                `,
+                init_function: function(cardElement) {
+                    const barsContainer = cardElement.querySelector('#mb-bars');
+                    if (!barsContainer) return;
+                    const bars = Array.from(barsContainer.querySelectorAll('.boltzmann-bar'));
+                    function randomizeHeights() {
+                        let baseProb = Math.random() * 60 + 20; 
+                        bars[0].style.height = `${baseProb}%`;
+                        bars[1].style.height = `${baseProb * (Math.random()*0.3 + 0.4)}%`; 
+                        bars[2].style.height = `${baseProb * (Math.random()*0.2 + 0.1)}%`; 
+                        bars[3].style.height = `${baseProb * (Math.random()*0.1 + 0.02)}%`;
+                    }
+                    randomizeHeights(); 
+                    barsContainer.parentElement.onclick = randomizeHeights; 
+                }
+            },
+            {
+                id: "partition-function",
+                title: "2. دالة التجزئة (Partition function)",
+                definition: "هي مقياس لعدد الحالات المتاحة للنظام عند درجة حرارة معينة. إنها تمثل مجموع كل 'عوامل بولتزمان' الممكنة، وبالتالي تلخص الخصائص الإحصائية للنظام في كمية واحدة.",
+                relation: "$$ Z = \\sum_i g_i e^{-E_i/kT} $$",
+                parameters: [
+                    { symbol: "$Z$", explanation: "دالة التجزئة." }, { symbol: "$\\sum_i$", explanation: "رمز المجموع على جميع مستويات الطاقة الممكنة $i$." }, { symbol: "$g_i$", explanation: "عدد الحالات الكمومية (Degeneracy) عند مستوى الطاقة $E_i$." }, { symbol: "$e^{-E_i/kT}$", explanation: "عامل بولتزمان لمستوى الطاقة $E_i$." }, { symbol: "$E_i$", explanation: "طاقة المستوى $i$." }, { symbol: "$k$", explanation: "ثابت بولتزمان." }, { symbol: "$T$", explanation: "درجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: قائمة طعام المطعم الشاملة",
+                analogy_text: "دالة التجزئة كقائمة طعام ضخمة لمطعم. القائمة (Z) لا تخبرك فقط بعدد الأطباق، بل تعطي فكرة عن 'ثراء' وتنوع الخيارات المتاحة. كل طبق له سعر (طاقة $E_i$)، ومدى إقبال الناس عليه يعتمد على السعر (عامل بولتزمان $e^{-E_i/kT}$). دالة التجزئة هي مجموع 'جاذبية' كل الأطباق الممكنة.",
+                visualization_html: `
+                    <p class="text-slate-600 mb-2">دالة التجزئة (Z) تجمع كل الحالات الممكنة:</p>
+                    <div id="partition-options-vis" class="partition-options"></div>
+                    <button id="add-state-btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">أضف حالة جديدة (محاكاة)</button>
+                `,
+                init_function: function(cardElement) {
+                    const optionsContainer = cardElement.querySelector('#partition-options-vis');
+                    const addButton = cardElement.querySelector('#add-state-btn');
+                    if (!optionsContainer || !addButton) return;
+                    let stateCount = 0;
+                    const initialStates = ["حالة أ", "حالة ب", "حالة ج"];
+                    function addState(name, delay = 0) {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'partition-option';
+                        optionDiv.textContent = name;
+                        optionDiv.style.animationDelay = `${delay}s`;
+                        optionsContainer.appendChild(optionDiv);
+                    }
+                    initialStates.forEach((state, index) => addState(state, index * 0.2));
+                    stateCount = initialStates.length;
+                    addButton.onclick = () => { stateCount++; addState(`حالة ${String.fromCharCode(65 + stateCount -1)}`, 0); };
+                }
+            },
+            {
+                id: "mbd-law",
+                title: "3. قانون توزيع ماكسويل-بولتزمان (Maxwell-Boltzmann distribution law)",
+                definition: "قانون يحدد العدد المتوقع للجسيمات $N_i$ التي تملك طاقة $E_i$ في نظام معين عند درجة حرارة ثابتة.",
+                relation: "$$ N_i = N \\frac{g_i e^{-E_i/kT}}{Z} $$",
+                 parameters: [
+                    { symbol: "$N_i$", explanation: "العدد المتوقع للجسيمات في مستوى الطاقة $E_i$." }, { symbol: "$N$", explanation: "العدد الكلي للجسيمات في النظام." }, { symbol: "$g_i$", explanation: "عدد الحالات الكمومية (Degeneracy) عند $E_i$." }, { symbol: "$e^{-E_i/kT}$", explanation: "عامل بولتزمان لـ $E_i$." }, { symbol: "$Z$", explanation: "دالة التجزئة للنظام." }, { symbol: "$E_i$", explanation: "طاقة المستوى $i$." }, { symbol: "$k$", explanation: "ثابت بولتزمان." }, { symbol: "$T$", explanation: "درجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: توزيع السكان في أحياء المدينة",
+                analogy_text: "إذا كانت 'الاحتمالية' (من التعريف رقم 1) هي نسبة البيوت في حي معين، فإن 'قانون التوزيع' هذا يخبرك بعدد السكان الفعليين في هذا الحي (مستوى الطاقة). ببساطة، نضرب النسبة المئوية للبيوت في إجمالي عدد سكان المدينة (N) لنعرف كم شخصاً يسكن في كل حي.",
+                visualization_html: `
+                    <div class="w-full text-center mb-2 text-sm text-slate-500">محاكاة لعدد الجسيمات في مستويات طاقة مختلفة</div>
+                    <div id="mbd-particles" class="boltzmann-bars-container" style="height:120px;"></div>
+                     <p class="mt-3 text-xs text-slate-500">تمثل الأعمدة عدد الجسيمات $N_i$ في كل مستوى طاقة.</p>
+                `,
+                init_function: function(cardElement) {
+                    const container = cardElement.querySelector('#mbd-particles');
+                    if (!container) return;
+                    const energyLevels = ['N(E1)', 'N(E2)', 'N(E3)', 'N(E4)'];
+                    const totalParticles = 100; 
+                    function updateParticleDistribution() {
+                        container.innerHTML = ''; 
+                        let remainingParticles = totalParticles;
+                        let probabilities = [0.55, 0.25, 0.15, 0.05]; 
+                        for(let i = probabilities.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [probabilities[i], probabilities[j]] = [probabilities[j], probabilities[i]];
+                        }
+                        energyLevels.forEach((levelName, index) => {
+                            const bar = document.createElement('div');
+                            bar.className = 'boltzmann-bar';
+                            let numParticles;
+                            if (index < energyLevels.length -1) {
+                                numParticles = Math.round(totalParticles * probabilities[index] * (0.8 + Math.random()*0.4) ); 
+                                numParticles = Math.min(numParticles, remainingParticles); 
+                            } else { numParticles = remainingParticles; }
+                            remainingParticles -= numParticles;
+                            if (remainingParticles < 0) remainingParticles = 0;
+                            const heightPercentage = (numParticles / totalParticles) * 100;
+                            bar.style.height = `${Math.max(5, heightPercentage)}%`; 
+                            bar.style.backgroundColor = `hsl(${200 + index * 20}, 70%, 60%)`; 
+                            const countSpan = document.createElement('span');
+                            countSpan.textContent = `${levelName}: ${numParticles}`;
+                            countSpan.style.bottom = '-25px'; countSpan.style.fontSize = '0.7rem';
+                            bar.appendChild(countSpan); container.appendChild(bar);
+                        });
+                    }
+                    updateParticleDistribution(); container.parentElement.onclick = updateParticleDistribution; 
+                }
+            },
+            {
+                id: "total-energy-system",
+                title: "4. الطاقة الكلية للنظام (The total energy of the system of MBD)",
+                definition: "هي مجموع طاقات جميع الجسيمات في النظام. يتم حسابها عن طريق ضرب عدد الجسيمات في كل مستوى طاقة بطاقة هذا المستوى، ثم جمع النواتج.",
+                relation: "$$ U = \\sum_i N_i E_i $$",
+                parameters: [
+                    { symbol: "$U$", explanation: "الطاقة الكلية للنظام." }, { symbol: "$\\sum_i$", explanation: "رمز المجموع على جميع مستويات الطاقة $i$." }, { symbol: "$N_i$", explanation: "عدد الجسيمات في مستوى الطاقة $E_i$." }, { symbol: "$E_i$", explanation: "طاقة المستوى $i$." }
+                ],
+                analogy_title: "🧠 الربط الذهني: تجميع مشتريات السوبر ماركت",
+                analogy_text: "تخيل أنك تشتري عدة أصناف من السوبر ماركت. كل صنف (مستوى طاقة $E_i$) له سعر، وأنت تشتري كمية معينة منه (عدد الجسيمات $N_i$). الطاقة الكلية (U) هي إجمالي الفاتورة، أي مجموع (كمية كل صنف × سعر الصنف).",
+                visualization_html: `
+                    <p class="text-slate-600 mb-3">محاكاة لتجميع الطاقة من الجسيمات:</p>
+                    <div id="energy-collector-vis" class="energy-collector">U = ?</div>
+                    <button id="collect-energy-btn" class="mt-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">اجمع طاقات الجسيمات!</button>
+                `,
+                init_function: function(cardElement) {
+                    const collectorDiv = cardElement.querySelector('#energy-collector-vis');
+                    const collectButton = cardElement.querySelector('#collect-energy-btn');
+                    if (!collectorDiv || !collectButton) return;
+                    let totalEnergyCollected = 0;
+                    collectorDiv.textContent = `U = ${totalEnergyCollected}`;
+                    collectButton.onclick = () => {
+                        const numPackets = Math.floor(Math.random() * 3) + 2; 
+                        for (let i = 0; i < numPackets; i++) {
+                            const packet = document.createElement('div');
+                            packet.className = 'energy-packet';
+                            const angle = Math.random() * 2 * Math.PI;
+                            const radius = 100 + Math.random() * 50; 
+                            packet.style.setProperty('--start-x', `${Math.cos(angle) * radius}px`);
+                            packet.style.setProperty('--start-y', `${Math.sin(angle) * radius}px`);
+                            collectorDiv.appendChild(packet);
+                            const packetEnergy = Math.floor(Math.random() * 10) + 1; 
+                            packet.onanimationend = () => {
+                                packet.remove(); totalEnergyCollected += packetEnergy;
+                                collectorDiv.textContent = `U = ${totalEnergyCollected}`;
+                            };
+                        }
+                    };
+                }
+            },
+            {
+                id: "total-energy-partition",
+                title: "5. العلاقة بين الطاقة الكلية ودالة التجزئة",
+                definition: "يمكن اشتقاق الطاقة الكلية للنظام مباشرة من دالة التجزئة، مما يوضح أهميتها المحورية في الديناميكا الحرارية الإحصائية. هذه العلاقة تظهر كيف أن كل الخصائص الثرموديناميكية للنظام 'مُشفرة' داخل دالة التجزئة.",
+                relation: "$$ U = N k_B T^2 \\left( \\frac{\\partial \\ln Z}{\\partial T} \\right)_V = -N \\left( \\frac{\\partial \\ln Z}{\\partial \\beta} \\right)_V $$",
+                parameters: [
+                    { symbol: "$U$", explanation: "الطاقة الكلية للنظام." }, { symbol: "$N$", explanation: "العدد الكلي للجسيمات." }, { symbol: "$k_B$", explanation: "ثابت بولتزمان." }, { symbol: "$T$", explanation: "درجة الحرارة المطلقة." }, { symbol: "$Z$", explanation: "دالة التجزئة." }, { symbol: "$\\ln Z$", explanation: "اللوغاريتم الطبيعي لـ $Z$." }, { symbol: "$\\left( \\frac{\\partial \\ln Z}{\\partial T} \\right)_V$", explanation: "المشتقة الجزئية لـ $\\ln Z$ بالنسبة لـ $T$ عند حجم ثابت $V$." }, { symbol: "$\\beta$", explanation: "المعامل $\\frac{1}{k_B T}$." }, { symbol: "$\\left( \\frac{\\partial \\ln Z}{\\partial \\beta} \\right)_V$", explanation: "المشتقة الجزئية لـ $\\ln Z$ بالنسبة لـ $\\beta$ عند حجم ثابت $V$." }
+                ],
+                analogy_title: "🧠 الربط الذهني: الـ DNA للنظام الثرموديناميكي",
+                analogy_text: "فكر في دالة التجزئة (Z) كأنها الـ DNA الخاص بالنظام. الـ DNA يحتوي على كل المعلومات الجينية للكائن الحي. بنفس الطريقة، Z تحتوي على كل المعلومات الثرموديناميكية للنظام. بتطبيق 'عمليات رياضية' معينة (مثل الاشتقاق)، يمكننا 'استخلاص' معلومات محددة مثل الطاقة الكلية U.",
+                visualization_html: `
+                    <div class="text-center p-4 border border-dashed border-purple-400 rounded-lg bg-purple-50">
+                        <p class="text-lg font-semibold text-purple-700">دالة التجزئة (Z) <span class="text-2xl mx-2">🧬</span></p>
+                        <p class="text-slate-600 my-2">تحتوي على كل أسرار النظام!</p>
+                        <div class="my-3"><span class="text-3xl text-purple-500 animate-pulse">↓</span> <span class="text-sm text-slate-500">(اشتقاق رياضي)</span> <span class="text-3xl text-purple-500 animate-pulse">↓</span></div>
+                        <p class="text-lg font-semibold text-amber-700">الطاقة الكلية (U) <span class="text-2xl mx-2">💡</span></p>
+                    </div>
+                `,
+                init_function: function(cardElement) { /* No dynamic JS needed */ }
+            },
+            // New definitions start here
+            {
+                id: "average-energy-particle",
+                title: "6. متوسط طاقة الجسيم (The average energy of the particle)",
+                definition: "هو الطاقة الكلية للنظام مقسومة على العدد الكلي للجسيمات في النظام. يمثل متوسط الطاقة التي يمتلكها جسيم واحد.",
+                relation: "$$ \\bar{E} = \\frac{U}{N} = \\frac{1}{N} N k_B T^2 \\left( \\frac{\\partial \\ln Z}{\\partial T} \\right)_V = k_B T^2 \\left( \\frac{\\partial \\ln Z}{\\partial T} \\right)_V = - \\left( \\frac{\\partial \\ln Z}{\\partial \\beta} \\right)_V $$",
+                parameters: [
+                    { symbol: "$\\bar{E}$", explanation: "متوسط طاقة الجسيم الواحد." },
+                    { symbol: "$U$", explanation: "الطاقة الكلية للنظام." },
+                    { symbol: "$N$", explanation: "العدد الكلي للجسيمات." },
+                    { symbol: "$k_B, T, Z, \\beta$", explanation: "نفس تعريفات السؤال السابق." }
+                ],
+                analogy_title: "🧠 الربط الذهني: متوسط الدخل الفردي",
+                analogy_text: "إذا كانت الطاقة الكلية (U) هي إجمالي دخل مدينة ما، وعدد الجسيمات (N) هو عدد سكان المدينة، فإن متوسط طاقة الجسيم ($\\bar{E}$) هو متوسط الدخل الفردي في هذه المدينة. إنه مقياس لما يحصل عليه 'المواطن العادي' من طاقة.",
+                visualization_html: `
+                    <div class="text-center p-4 border border-dashed border-green-400 rounded-lg bg-green-50">
+                        <p class="text-lg font-semibold text-green-700">الطاقة الكلية (U) <span class="text-2xl mx-2">💰</span> (إجمالي دخل المدينة)</p>
+                        <p class="text-slate-600 my-2">مقسومة على</p>
+                        <p class="text-lg font-semibold text-green-700">عدد الجسيمات (N) <span class="text-2xl mx-2">👨‍👩‍👧‍👦</span> (عدد السكان)</p>
+                        <div class="my-3"><span class="text-3xl text-green-500 animate-pulse">=</span></div>
+                        <p class="text-lg font-semibold text-teal-700">متوسط طاقة الجسيم ($\\bar{E}$) <span class="text-2xl mx-2">🧍</span> (متوسط دخل الفرد)</p>
+                    </div>
+                `
+            },
+            {
+                id: "beta-constant",
+                title: "7. ثابت بيتا (The β constant)",
+                definition: "هو ثابت فيزيائي مهم في الميكانيكا الإحصائية، ويرتبط عكسياً بدرجة الحرارة المطلقة وثابت بولتزمان. يستخدم لتبسيط العديد من المعادلات.",
+                relation: "$$ \\beta = \\frac{1}{kT} $$",
+                parameters: [
+                    { symbol: "$\\beta$", explanation: "ثابت بيتا." },
+                    { symbol: "$k$", explanation: "ثابت بولتزمان." },
+                    { symbol: "$T$", explanation: "درجة الحرارة المطلقة (بالكلفن)." }
+                ],
+                analogy_title: "🧠 الربط الذهني: مقياس 'برودة' الجو",
+                analogy_text: "فكر في $\\beta$ كأنها مقياس لمدى 'برودة' أو 'صعوبة' البيئة المحيطة بالجسيمات. عندما تكون درجة الحرارة T منخفضة جداً (جو بارد جداً)، تكون $\\beta$ كبيرة جداً، مما يعني أن الجسيمات تجد صعوبة في اكتساب طاقة والتحرك بحرية. وعندما تكون T عالية (جو حار)، تكون $\\beta$ صغيرة، مما يعني أن الجسيمات لديها طاقة أكبر وتتحرك بسهولة.",
+                visualization_html: `
+                    <div class="text-center p-4">
+                        <p class="text-lg">عندما تكون الحرارة T <span class="text-red-500 font-bold">عالية</span>  $\\Rightarrow \\beta$ تكون <span class="text-blue-500 font-bold">صغيرة</span> (سهولة في اكتساب الطاقة)</p>
+                        <p class="text-lg mt-2">عندما تكون الحرارة T <span class="text-blue-500 font-bold">منخفضة</span> $\\Rightarrow \\beta$ تكون <span class="text-red-500 font-bold">كبيرة</span> (صعوبة في اكتساب الطاقة)</p>
+                    </div>
+                `
+            },
+            {
+                id: "occupation-ratio",
+                title: "8. نسبة إشغال الجسيمات في مستويين للطاقة (The ratio of occupation number of particles in two energy levels)",
+                definition: "هي النسبة بين عدد الجسيمات الموجودة في مستوى طاقة أعلى ($N_2$ عند $E_2$) وعدد الجسيمات في مستوى طاقة أدنى ($N_1$ عند $E_1$). هذه النسبة تعتمد بشكل أسي على فرق الطاقة بين المستويين وعلى درجة الحرارة.",
+                relation: "$$ \\frac{N_2}{N_1} = \\frac{g_2}{g_1} e^{-(E_2 - E_1)/kT} $$",
+                parameters: [
+                    { symbol: "$N_1, N_2$", explanation: "عدد الجسيمات في مستويات الطاقة $E_1, E_2$ على التوالي." },
+                    { symbol: "$g_1, g_2$", explanation: "عدد الحالات الكمومية (Degeneracy) عند $E_1, E_2$ على التوالي." },
+                    { symbol: "$E_1, E_2$", explanation: "قيمتا طاقتي المستويين." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: سكان الأدوار العليا مقابل الأدوار السفلى",
+                analogy_text: "تخيل مبنى سكنياً. النسبة بين عدد السكان في الطابق العاشر (طاقة عالية $E_2$) والطابق الثاني (طاقة منخفضة $E_1$) تعتمد على 'صعوبة' الوصول للطابق العاشر (فرق الطاقة $E_2-E_1$) وعلى 'حماس' السكان للصعود (درجة الحرارة T). كلما زاد فرق الصعوبة، قلت نسبة السكان في الأعلى. وكلما زاد الحماس (الحرارة)، زادت فرصة وجود سكان في الأدوار العليا.",
+                 visualization_html: `
+                    <div class="w-full text-center mb-2 text-sm text-slate-500">مقارنة الإشغال بين مستويين (E2 > E1)</div>
+                    <div id="occupation-bars" class="boltzmann-bars-container" style="width:50%; height:80px;">
+                        <div class="boltzmann-bar" id="level1-bar" style="height: 70%; background-color: #60a5fa;"><span>N1 (عند E1)</span></div>
+                        <div class="boltzmann-bar" id="level2-bar" style="height: 30%; background-color: #f87171;"><span>N2 (عند E2)</span></div>
+                    </div>
+                    <p class="mt-3 text-xs text-slate-500">كلما زاد فرق الطاقة (E2-E1) أو انخفضت T، قلت النسبة N2/N1.</p>
+                `,
+                init_function: function(cardElement) {
+                    // Simple visualization, could be made interactive with sliders for T or (E2-E1)
+                }
+            },
+            {
+                id: "integral-partition-function",
+                title: "9. الصيغة التكاملية لدالة التجزئة (The integral form of partition function)",
+                definition: "عندما تكون مستويات الطاقة متقاربة جداً لدرجة يمكن اعتبارها مستمرة (كما في حالة الغاز المثالي)، يتم استبدال المجموع (Summation) في تعريف دالة التجزئة بتكامل (Integration) على جميع قيم الطاقة الممكنة.",
+                relation: "$$ Z = \\int_0^\\infty g(E) e^{-E/kT} dE $$",
+                parameters: [
+                    { symbol: "$Z$", explanation: "دالة التجزئة." },
+                    { symbol: "$\\int_0^\\infty dE$", explanation: "التكامل على الطاقة من صفر إلى ما لا نهاية." },
+                    { symbol: "$g(E)$", explanation: "كثافة الحالات (Density of States)، أي عدد الحالات المتاحة لكل وحدة طاقة عند الطاقة E." },
+                    { symbol: "$e^{-E/kT}$", explanation: "عامل بولتزمان عند الطاقة E." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: من عد الدرجات إلى قياس مساحة التل",
+                analogy_text: "إذا كنت تحسب عدد الأشخاص في مبنى به عدد قليل من الطوابق الواضحة (مستويات طاقة منفصلة)، فإنك تجمع عدد الأشخاص في كل طابق. أما إذا كنت تحسب عدد الأشخاص المنتشرين على تل كبير (مستويات طاقة مستمرة)، فإنك تحتاج إلى 'مسح' التل بالكامل وجمع المساهمات الصغيرة من كل جزء، وهذا ما يفعله التكامل. $g(E)$ هنا تشبه كثافة الناس عند كل ارتفاع على التل.",
+                visualization_html: `
+                    <div class="text-center p-4">
+                        <p class="text-lg">للمستويات المتقطعة: $Z = \\sum g_i e^{-E_i/kT}$ (كأنك تجمع قطع ليجو 🧱)</p>
+                        <p class="text-2xl font-bold my-3 text-blue-600">عندما تصبح المستويات متصلة جداً...</p>
+                        <p class="text-lg">تتحول إلى: $Z = \\int g(E) e^{-E/kT} dE$ (كأنك تملأ وعاءً بالماء 🌊)</p>
+                    </div>
+                `
+            },
+            {
+                id: "density-of-states",
+                title: "10. عدد حالات الجسيمات $g(E)$ بين E و E+dE (The number of particle states $g(E)$ between E and $E+dE$)",
+                definition: "يُعرف أيضاً بكثافة الحالات (Density of States). يمثل عدد الحالات الكمومية المستقلة المتاحة للجسيمات التي طاقتها تقع في نطاق صغير جداً $dE$ حول الطاقة $E$.",
+                relation: "بالنسبة لغاز مثالي ثلاثي الأبعاد لجسيمات حرة: $$ g(E)dE = \\frac{V}{2\\pi^2} \\left( \\frac{2m}{\\hbar^2} \\right)^{3/2} E^{1/2} dE $$ أو بصيغة أخرى شائعة: $$ g(E)dE = \\frac{4\\pi V (2m)^{3/2}}{h^3} E^{1/2} dE $$",
+                parameters: [
+                    { symbol: "$g(E)dE$", explanation: "عدد الحالات في مدى الطاقة $dE$ حول $E$." },
+                    { symbol: "$V$", explanation: "حجم النظام." },
+                    { symbol: "$m$", explanation: "كتلة الجسيم الواحد." },
+                    { symbol: "$\\hbar$", explanation: "ثابت بلانك المختزل ($\\hbar = h/2\\pi$)." },
+                    { symbol: "$h$", explanation: "ثابت بلانك." },
+                    { symbol: "$E$", explanation: "الطاقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: عدد الغرف المتاحة في فندق ضخم",
+                analogy_text: "تخيل فندقاً ضخماً جداً (النظام). $g(E)$ تخبرك كم غرفة متاحة (عدد الحالات) للنزلاء الذين يرغبون في دفع مبلغ معين (طاقة $E$). بعض 'فئات الأسعار' (نطاقات الطاقة) قد تحتوي على عدد كبير جداً من الغرف المتاحة، بينما فئات أخرى قد تكون غرفها محدودة. هذه الدالة مهمة لأنها تحدد 'السعة الاستيعابية' لكل مستوى طاقة.",
+                visualization_html: `
+                    <div class="w-full text-center mb-2 text-sm text-slate-500">محاكاة لكثافة الحالات $g(E)$ كدالة في الطاقة $E$ (تزداد مع $E^{1/2}$)</div>
+                    <div id="density-plot" style="width: 90%; height: 100px; background: linear-gradient(to right, #f0f9ff 0%, #a5f3fc 100%); border-radius: 5px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background-color: #0ea5e9; transition: width 2s ease-out;" data-target-width="80%"></div>
+                    </div>
+                     <p class="mt-3 text-xs text-slate-500">كلما زادت الطاقة E (يمين الرسم)، زاد عدد الحالات المتاحة $g(E)$ بشكل عام.</p>
+                `,
+                init_function: function(cardElement) {
+                    const plotDiv = cardElement.querySelector('#density-plot > div');
+                    if(plotDiv) {
+                       setTimeout(() => { plotDiv.style.width = plotDiv.dataset.targetWidth; }, 100);
+                    }
+                }
+            },
+            // Continue for definitions 11-28
+            {
+                id: "partition-function-ideal-gas",
+                title: "11. دالة التجزئة للغاز المثالي (The partition function of ideal gas)",
+                definition: "هي دالة التجزئة المحسوبة خصيصاً لنظام يتكون من غاز مثالي، حيث تكون الجسيمات غير متفاعلة ويمكن اعتبار مستويات طاقتها مستمرة (باستخدام الصيغة التكاملية).",
+                relation: "$$ Z_{ideal} = \\frac{V}{h^3} (2\\pi mkT)^{3/2} $$ (لجسيم واحد). لدالة تجزئة نظام من N جسيم مماثل وغير مميز: $$ Z_N = \\frac{1}{N!} Z_{ideal}^N = \\frac{1}{N!} \\left( \\frac{V}{h^3} (2\\pi mkT)^{3/2} \\right)^N $$",
+                parameters: [
+                     { symbol: "$Z_{ideal}$", explanation: "دالة التجزئة لجسيم واحد في غاز مثالي." },
+                     { symbol: "$Z_N$", explanation: "دالة التجزئة لنظام من N جسيم." },
+                     { symbol: "$V$", explanation: "حجم الوعاء الذي يحتوي الغاز." },
+                     { symbol: "$h$", explanation: "ثابت بلانك." },
+                     { symbol: "$m$", explanation: "كتلة جسيم الغاز الواحد." },
+                     { symbol: "$k$", explanation: "ثابت بولتزمان." },
+                     { symbol: "$T$", explanation: "درجة الحرارة المطلقة." },
+                     { symbol: "$N!$", explanation: "مضروب N، ويظهر بسبب عدم تمييز الجسيمات المتماثلة (تصحيح جيبس)." }
+                ],
+                analogy_title: "🧠 الربط الذهني: عدد 'الخيارات الحركية' للغاز",
+                analogy_text: "تخيل كل جسيم غاز كراقص في قاعة رقص ضخمة (الحجم V). دالة التجزئة للغاز المثالي تحسب عدد 'الأوضاع الحركية' المتاحة لكل راقص (تعتمد على كتلته m وحرارته T)، ثم تضرب هذه الخيارات لجميع الراقصين (N)، مع الأخذ في الاعتبار أن الراقصين متماثلين لا يمكن تمييزهم (N!). كلما زاد الحجم أو الحرارة، زادت الخيارات المتاحة.",
+                visualization_html: `
+                    <div class="gas-container" id="ideal-gas-vis"></div>
+                    <p class="mt-2 text-xs text-slate-500 text-center">محاكاة بسيطة لجسيمات غاز مثالي تتحرك بحرية.</p>
+                `,
+                init_function: function(cardElement) {
+                    const container = cardElement.querySelector('#ideal-gas-vis');
+                    if (!container) return;
+                    const numParticles = 10;
+                    for (let i = 0; i < numParticles; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'gas-particle';
+                        particle.style.left = `${Math.random() * 95}%`; // % to be responsive
+                        particle.style.top = `${Math.random() * 90}%`;
+                        container.appendChild(particle);
+                        animateParticle(particle, container);
+                    }
+                    function animateParticle(p, c) {
+                        let dx = (Math.random() - 0.5) * 4; // Random speed/direction
+                        let dy = (Math.random() - 0.5) * 4;
+                        function move() {
+                            let rect = c.getBoundingClientRect();
+                            let pRect = p.getBoundingClientRect();
+                            let currentX = p.offsetLeft;
+                            let currentY = p.offsetTop;
+
+                            if (currentX + dx > rect.width - pRect.width || currentX + dx < 0) dx = -dx;
+                            if (currentY + dy > rect.height - pRect.height || currentY + dy < 0) dy = -dy;
+                            
+                            p.style.left = `${currentX + dx}px`;
+                            p.style.top = `${currentY + dy}px`;
+                            requestAnimationFrame(move);
+                        }
+                        move();
+                    }
+                }
+            },
+            {
+                id: "average-energy-mbd-ideal",
+                title: "12. متوسط طاقة جسيمات ماكسويل-بولتزمان في الغاز المثالي",
+                definition: "متوسط الطاقة الحركية لجسيم واحد في غاز مثالي يتبع إحصاء ماكسويل-بولتزمان. تعتمد فقط على درجة الحرارة.",
+                relation: "$$ \\bar{E}_{MBD, ideal} = \\frac{3}{2} kT $$",
+                parameters: [
+                    { symbol: "$\\bar{E}_{MBD, ideal}$", explanation: "متوسط طاقة الجسيم في غاز مثالي (MBD)." },
+                    { symbol: "$k$", explanation: "ثابت بولتزمان." },
+                    { symbol: "$T$", explanation: "درجة الحرارة المطلقة." },
+                    { symbol: "$\\frac{3}{2}$", explanation: "يشير إلى ثلاث درجات حرية انتقالية للجسيم في الفضاء ثلاثي الأبعاد (x, y, z)، وكل درجة حرية تساهم بـ $\\frac{1}{2}kT$ في الطاقة (حسب نظرية التوزيع المتساوي للطاقة)." }
+                ],
+                analogy_title: "🧠 الربط الذهني: 'ميزانية' الحركة لكل جسيم",
+                analogy_text: "تخيل أن كل جسيم غاز لديه 'ميزانية' محددة من الطاقة الحركية، وهذه الميزانية تعتمد فقط على درجة حرارة الغرفة (T). كلما زادت حرارة الغرفة، زادت ميزانية الحركة لكل جسيم. الرقم 3/2 يعني أن الجسيم يمكنه التحرك في 3 اتجاهات (أمام/خلف، يمين/يسار، أعلى/أسفل)، وكل اتجاه يحصل على حصة متساوية من 'ميزانية الطاقة'.",
+                visualization_html: `
+                    <div class="text-center p-4">
+                        <p class="text-xl">كلما زادت الحرارة T 🔥، زاد متوسط طاقة الجسيم 💨</p>
+                        <p class="text-lg mt-2">الطاقة تتوزع بالتساوي على 3 اتجاهات للحركة: <span class="font-mono text-blue-600">X, Y, Z</span></p>
+                    </div>
+                `
+            },
+             // ... Definitions 13-20 (Maxwell's formulas for energy/velocity, most probable, average, rms, ratios)
+            // These are more math-heavy and might have static visualizations or simple graphs if animatable
+            {
+                id: "maxwell-energy-dist",
+                title: "13. صيغة ماكسويل لتوزيع الطاقة (Maxwell formula for energy distribution)",
+                definition: "تصف هذه الدالة كيف تتوزع جسيمات الغاز المثالي على مختلف قيم الطاقة الحركية عند درجة حرارة معينة. أي، كم عدد الجسيمات التي تمتلك طاقة ضمن نطاق معين.",
+                relation: "$$ \\frac{dN_E}{N dE} = f(E) = \\frac{2}{\\sqrt{\\pi}(kT)^{3/2}} E^{1/2} e^{-E/kT} $$",
+                parameters: [
+                    { symbol: "$dN_E$", explanation: "عدد الجسيمات التي طاقتها بين $E$ و $E+dE$." },
+                    { symbol: "$N$", explanation: "العدد الكلي للجسيمات." },
+                    { symbol: "$f(E)$", explanation: "دالة توزيع الطاقة (احتمالية وحدة الطاقة)." },
+                    { symbol: "$E$", explanation: "الطاقة الحركية للجسيم." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: توزيع أطوال الناس في مجموعة كبيرة",
+                analogy_text: "لو قست أطوال مجموعة كبيرة جداً من الناس، ستجد أن قلة قليلة قصار جداً، وقلة قليلة طوال جداً، ومعظم الناس يتركزون حول طول متوسط. توزيع الطاقة للجسيمات يشبه هذا، لكنه ليس متماثلاً تماماً. هناك عدد قليل من الجسيمات بطاقة منخفضة جداً، وعدد قليل بطاقة عالية جداً، ومعظمها يمتلك طاقة قريبة من 'الطاقة الأكثر احتمالاً'.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> (تصور بياني لمنحنى توزيع الطاقة سيكون مناسباً هنا) <br> يبدأ من الصفر، يرتفع لذروة، ثم يهبط تدريجياً. </div>`
+            },
+            {
+                id: "maxwell-velocity-dist",
+                title: "14. صيغة ماكسويل لتوزيع السرعة (Maxwell formula for velocity distribution)",
+                definition: "تصف هذه الدالة كيف تتوزع جسيمات الغاز المثالي على مختلف قيم السرعات (مقدار السرعة) عند درجة حرارة معينة.",
+                relation: "$$ \\frac{dN_v}{N dv} = f(v) = 4\\pi \\left( \\frac{m}{2\\pi kT} \\right)^{3/2} v^2 e^{-mv^2/2kT} $$",
+                parameters: [
+                    { symbol: "$dN_v$", explanation: "عدد الجسيمات التي سرعتها بين $v$ و $v+dv$." },
+                    { symbol: "$N$", explanation: "العدد الكلي للجسيمات." },
+                    { symbol: "$f(v)$", explanation: "دالة توزيع السرعة." },
+                    { symbol: "$v$", explanation: "مقدار سرعة الجسيم." },
+                    { symbol: "$m$", explanation: "كتلة الجسيم." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: سرعات السيارات على طريق سريع",
+                analogy_text: "كما ذكرنا سابقاً، إذا راقبت سرعات السيارات على طريق سريع، ستجد توزيعاً مشابهاً. قلة تسير ببطء شديد، قلة تسير بسرعة جنونية، والأغلبية حول سرعة معينة. هذا المنحنى يمثل توزيع سرعات جسيمات الغاز.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> (تصور بياني لمنحنى توزيع السرعات سيكون مناسباً هنا) <br> يشبه منحنى توزيع الطاقة ولكنه يعتمد على $v^2$ في الأس. </div>`
+            },
+            {
+                id: "most-probable-energy",
+                title: "15. توزيع الطاقة الأكثر احتمالاً (The most probable energy distribution)",
+                definition: "هي قيمة الطاقة التي يكون عندها أكبر عدد من جسيمات النظام. يمكن إيجادها عن طريق إيجاد القيمة العظمى لدالة توزيع الطاقة $f(E)$.",
+                relation: "$$ E_{mp} = \\frac{1}{2} kT $$",
+                parameters: [
+                    { symbol: "$E_{mp}$", explanation: "الطاقة الأكثر احتمالاً." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: 'الموضة' في الطاقة",
+                analogy_text: "إذا كان توزيع الطاقة هو توزيع الثروات، فالطاقة الأكثر احتمالاً هي 'مستوى الدخل' الذي يمتلكه أكبر عدد من الناس (قمة المنحنى). إنها ليست بالضرورة متوسط الدخل، ولكنها القيمة الأكثر شيوعاً.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> هي قمة منحنى توزيع الطاقة. </div>`
+            },
+            {
+                id: "most-probable-velocity",
+                title: "16. توزيع السرعة الأكثر احتمالاً ($v_{mp}$)",
+                definition: "هي قيمة السرعة التي يمتلكها أكبر عدد من جسيمات النظام. يمكن إيجادها عن طريق إيجاد القيمة العظمى لدالة توزيع السرعة $f(v)$.",
+                relation: "$$ v_{mp} = \\sqrt{\\frac{2kT}{m}} $$",
+                parameters: [
+                    { symbol: "$v_{mp}$", explanation: "السرعة الأكثر احتمالاً." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." },
+                    { symbol: "$m$", explanation: "كتلة الجسيم." }
+                ],
+                analogy_title: "🧠 الربط الذهني: السرعة 'الشائعة' على الطريق",
+                analogy_text: "السرعة الأكثر احتمالاً هي السرعة التي تراها معظم السيارات تسير بها على الطريق السريع. إنها قمة منحنى توزيع السرعات.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> هي قمة منحنى توزيع السرعات. </div>`
+            },
+            {
+                id: "average-velocity",
+                title: "17. متوسط توزيع السرعة ($v_{ave}$)",
+                definition: "هو المتوسط الحسابي لسرعات جميع جسيمات النظام.",
+                relation: "$$ v_{ave} = \\bar{v} = \\sqrt{\\frac{8kT}{\\pi m}} $$",
+                parameters: [
+                    { symbol: "$v_{ave}$", explanation: "متوسط السرعة." },
+                    { symbol: "$k, T, m$", explanation: "نفس التعريفات السابقة." },
+                    { symbol: "$\\pi$", explanation: "الثابت الرياضي باي." }
+                ],
+                analogy_title: "🧠 الربط الذهني: متوسط سرعة كل السيارات",
+                analogy_text: "إذا جمعت سرعات كل السيارات على الطريق وقسمتها على عددها، ستحصل على متوسط السرعة. هذه القيمة تختلف قليلاً عن السرعة الأكثر احتمالاً بسبب شكل المنحنى غير المتماثل.",
+                 visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> تكون $v_{ave}$ أكبر قليلاً من $v_{mp}$. </div>`
+            },
+            {
+                id: "rms-velocity",
+                title: "18. الجذر التربيعي لمتوسط مربع السرعة ($v_{rms}$)",
+                definition: "هو الجذر التربيعي لمتوسط مربعات سرعات الجسيمات. هذه القيمة مهمة لأن متوسط الطاقة الحركية يتناسب مع مربع السرعة.",
+                relation: "$$ v_{rms} = \\sqrt{\\overline{v^2}} = \\sqrt{\\frac{3kT}{m}} $$",
+                parameters: [
+                    { symbol: "$v_{rms}$", explanation: "الجذر التربيعي لمتوسط مربع السرعة." },
+                    { symbol: "$\\overline{v^2}$", explanation: "متوسط مربع السرعة." },
+                    { symbol: "$k, T, m$", explanation: "نفس التعريفات السابقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: السرعة 'الفعالة' للطاقة",
+                analogy_text: "بما أن الطاقة الحركية تعتمد على $v^2$, فإن $v_{rms}$ تعطينا فكرة عن السرعة التي لو امتلكتها كل الجسيمات لأعطتنا نفس الطاقة الحركية الكلية. إنها طريقة أخرى لقياس 'مدى سرعة' الجسيمات بشكل عام.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> تكون $v_{rms}$ أكبر من $v_{ave}$ و $v_{mp}$. <br> الترتيب: $v_{rms} > v_{ave} > v_{mp}$ </div>`
+            },
+            {
+                id: "ratio-vave-vmp",
+                title: "19. النسبة ($v_{ave}/v_{mp}$)",
+                definition: "النسبة بين متوسط السرعة والسرعة الأكثر احتمالاً.",
+                relation: "$$ \\frac{v_{ave}}{v_{mp}} = \\sqrt{\\frac{8kT/\\pi m}{2kT/m}} = \\sqrt{\\frac{4}{\\pi}} \\approx 1.128 $$",
+                parameters: [],
+                analogy_title: "🧠 الربط الذهني: مقارنة السرعات",
+                analogy_text: "هذه النسبة ثابتة وتوضح أن متوسط السرعة دائماً أكبر بحوالي 12.8% من السرعة الأكثر احتمالاً في توزيع ماكسويل-بولتزمان.",
+                visualization_html: `<div class="text-center p-2 text-lg font-bold text-indigo-600"> $v_{ave} \\approx 1.128 \\times v_{mp}$ </div>`
+            },
+            {
+                id: "ratio-vrms-vmp",
+                title: "20. النسبة ($v_{rms}/v_{mp}$)",
+                definition: "النسبة بين الجذر التربيعي لمتوسط مربع السرعة والسرعة الأكثر احتمالاً.",
+                relation: "$$ \\frac{v_{rms}}{v_{mp}} = \\sqrt{\\frac{3kT/m}{2kT/m}} = \\sqrt{\\frac{3}{2}} \\approx 1.225 $$",
+                parameters: [],
+                analogy_title: "🧠 الربط الذهني: مقارنة أخرى للسرعات",
+                analogy_text: "هذه النسبة ثابتة أيضاً وتوضح أن $v_{rms}$ دائماً أكبر بحوالي 22.5% من السرعة الأكثر احتمالاً.",
+                visualization_html: `<div class="text-center p-2 text-lg font-bold text-indigo-600"> $v_{rms} \\approx 1.225 \\times v_{mp}$ </div>`
+            },
+            // Definitions 21-25 (Fermi-Dirac, Bose-Einstein, Photon)
+            {
+                id: "fermi-dirac-prob",
+                title: "21. احتمالية إشغال فيرمي-ديراك (Partition probability for Fermi-Dirac distribution)",
+                definition: "تصف احتمالية أن تكون حالة كمومية معينة ذات طاقة $E$ مشغولة بواسطة فيرميون (جسيم يتبع مبدأ استبعاد باولي، مثل الإلكترون). لا يمكن أن يشغل أكثر من فيرميون واحد نفس الحالة الكمومية.",
+                relation: "$$ f_{FD}(E) = \\frac{1}{e^{(E - E_F)/kT} + 1} $$",
+                parameters: [
+                    { symbol: "$f_{FD}(E)$", explanation: "دالة توزيع فيرمي-ديراك (احتمالية الإشغال)." },
+                    { symbol: "$E$", explanation: "طاقة الحالة الكمومية." },
+                    { symbol: "$E_F$", explanation: "طاقة فيرمي (أعلى مستوى طاقة مشغول عند درجة حرارة الصفر المطلق)." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: مقاعد السينما الحصرية",
+                analogy_text: "تخيل أن كل حالة كمومية هي مقعد في سينما، والفيرميونات هم أشخاص يلتزمون بقاعدة 'مقعد واحد لكل شخص'. $E_F$ هي 'سعر التذكرة' الذي يفصل بين المقاعد الممتلئة (طاقتها أقل من $E_F$) والمقاعد الفارغة (طاقتها أعلى من $E_F$) عند درجة حرارة منخفضة جداً. الدالة تصف احتمالية أن يكون مقعد معين مشغولاً.",
+                visualization_html: `
+                    <div class="level-occupation-container">
+                        <div class="level-label">مستوى طاقة عالي (E > E_F)</div>
+                        <div class="energy-level" id="fd-level-high">
+                            <div class="particle-slot"></div> <div class="particle-slot"></div> <div class="particle-slot"></div>
+                        </div>
+                        <div class="level-label mt-2">مستوى طاقة منخفض (E < E_F)</div>
+                        <div class="energy-level" id="fd-level-low">
+                            <div class="particle-slot"></div> <div class="particle-slot"></div> <div class="particle-slot"></div>
+                        </div>
+                        <p class="text-xs mt-2 text-slate-500">عند T=0K، المستويات تحت $E_F$ تكون ممتلئة تماماً، وفوقها فارغة تماماً.</p>
+                    </div>
+                `,
+                init_function: function(cardElement) {
+                    const highLevel = cardElement.querySelector('#fd-level-high');
+                    const lowLevel = cardElement.querySelector('#fd-level-low');
+                    // Simplified: At low T, low energy levels are mostly full (max 1 per slot)
+                    Array.from(lowLevel.children).forEach(slot => { if(Math.random() < 0.9) slot.innerHTML = '<div class="fd-particle"></div>';});
+                    Array.from(highLevel.children).forEach(slot => { if(Math.random() < 0.1) slot.innerHTML = '<div class="fd-particle"></div>';});
+                }
+            },
+            {
+                id: "fermi-dirac-law",
+                title: "22. قانون توزيع فيرمي-ديراك (Fermi-Dirac distribution Law)",
+                definition: "عند ضرب احتمالية الإشغال $f_{FD}(E)$ بكثافة الحالات $g(E)$, نحصل على عدد الفيرميونات $dN_E$ التي طاقتها بين $E$ و $E+dE$.",
+                relation: "$$ dN_E = g(E) f_{FD}(E) dE = g(E) \\frac{1}{e^{(E - E_F)/kT} + 1} dE $$",
+                parameters: [
+                    { symbol: "$dN_E$", explanation: "عدد الفيرميونات بين $E$ و $E+dE$." },
+                    { symbol: "$g(E)$", explanation: "كثافة الحالات عند الطاقة $E$." },
+                    { symbol: "$f_{FD}(E)$", explanation: "دالة توزيع فيرمي-ديراك." }
+                ],
+                analogy_title: "🧠 الربط الذهني: عدد رواد السينما في كل صف",
+                analogy_text: "إذا كانت $f_{FD}(E)$ هي احتمالية أن يكون مقعد معين مشغول، و $g(E)$ هي عدد المقاعد المتاحة في صف معين (نطاق طاقة)، فإن ضربهما يعطينا عدد الأشخاص الفعليين الجالسين في هذا الصف.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> يمثل عدد الفيرميونات الفعلي عند كل طاقة. </div>`
+            },
+            {
+                id: "bose-einstein-prob",
+                title: "23. احتمالية إشغال بوز-أينشتاين (Partition probability for Bose-Einstein distribution)",
+                definition: "تصف احتمالية أن تكون حالة كمومية معينة ذات طاقة $E$ مشغولة بواسطة بوزون (جسيم لا يتبع مبدأ استبعاد باولي، مثل الفوتون). يمكن لعدة بوزونات أن تشغل نفس الحالة الكمومية.",
+                relation: "$$ f_{BE}(E) = \\frac{1}{e^{(E - \\mu)/kT} - 1} $$",
+                parameters: [
+                    { symbol: "$f_{BE}(E)$", explanation: "دالة توزيع بوز-أينشتاين (متوسط عدد الجسيمات في الحالة)." },
+                    { symbol: "$E$", explanation: "طاقة الحالة الكمومية." },
+                    { symbol: "$\\mu$", explanation: "الجهد الكيميائي (Chemical Potential). للفوتونات، $\\mu=0$." },
+                    { symbol: "$k, T$", explanation: "ثابت بولتزمان ودرجة الحرارة المطلقة." }
+                ],
+                analogy_title: "🧠 الربط الذهني: كرات السلة في الشبكة",
+                analogy_text: "تخيل أن كل حالة كمومية هي شبكة سلة، والبوزونات هي كرات سلة. يمكنك وضع أي عدد من الكرات في نفس الشبكة (لا يوجد مبدأ استبعاد). الدالة تصف متوسط عدد الكرات التي ستجدها في شبكة معينة، وهذا العدد يمكن أن يكون كبيراً جداً خاصة للحالات ذات الطاقة المنخفضة (تكاثف بوز-أينشتاين).",
+                visualization_html: `
+                     <div class="level-occupation-container">
+                        <div class="level-label">مستوى طاقة (يمكن أن يشغله عدة بوزونات)</div>
+                        <div class="energy-level" id="be-level">
+                            <div class="particle-slot"></div> <div class="particle-slot"></div> <div class="particle-slot"></div> <div class="particle-slot"></div>
+                        </div>
+                        <p class="text-xs mt-2 text-slate-500">البوزونات تحب التجمع في نفس الحالة، خاصة عند الطاقات المنخفضة.</p>
+                    </div>
+                `,
+                init_function: function(cardElement) {
+                    const level = cardElement.querySelector('#be-level');
+                    // Simplified: allow multiple particles per slot (conceptually)
+                    // For visualization, just show more particles in general
+                    Array.from(level.children).forEach(slot => {
+                        if(Math.random() < 0.7) { // Higher chance of occupation
+                            const numParticlesInSlot = Math.floor(Math.random() * 3) + 1; // 1 to 3
+                            for(let i=0; i < numParticlesInSlot; i++) {
+                                const p = document.createElement('div');
+                                p.className = 'be-particle';
+                                p.style.transform = `translateX(${i*3-3}px) scale(0.8)`; // Slight offset
+                                slot.appendChild(p);
+                            }
+                        }
+                    });
+                }
+            },
+            {
+                id: "bose-einstein-law",
+                title: "24. قانون توزيع بوز-أينشتاين (Bose-Einstein distribution law)",
+                definition: "عند ضرب متوسط عدد الإشغال $f_{BE}(E)$ بكثافة الحالات $g(E)$, نحصل على عدد البوزونات $dN_E$ التي طاقتها بين $E$ و $E+dE$.",
+                relation: "$$ dN_E = g(E) f_{BE}(E) dE = g(E) \\frac{1}{e^{(E - \\mu)/kT} - 1} dE $$",
+                parameters: [
+                    { symbol: "$dN_E$", explanation: "عدد البوزونات بين $E$ و $E+dE$." },
+                    { symbol: "$g(E)$", explanation: "كثافة الحالات عند الطاقة $E$." },
+                    { symbol: "$f_{BE}(E)$", explanation: "دالة توزيع بوز-أينشتاين." }
+                ],
+                analogy_title: "🧠 الربط الذهني: عدد كرات السلة في كل منطقة من الملعب",
+                analogy_text: "إذا كانت $f_{BE}(E)$ هي متوسط عدد الكرات في شبكة معينة، و $g(E)$ هي عدد الشبكات المتاحة في منطقة معينة من الملعب (نطاق طاقة)، فإن ضربهما يعطينا إجمالي عدد الكرات في تلك المنطقة.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> يمثل عدد البوزونات الفعلي عند كل طاقة. </div>`
+            },
+            {
+                id: "photon-dist-law",
+                title: "25. قانون توزيع الفوتونات (Photon distribution law)",
+                definition: "الفوتونات هي بوزونات، لذا تتبع إحصاء بوز-أينشتاين. لكن الجهد الكيميائي للفوتونات $\\mu=0$ لأن عددها غير محفوظ (يمكن إنشاؤها أو امتصاصها). هذا يؤدي إلى قانون بلانك لإشعاع الجسم الأسود.",
+                relation: "عدد الفوتونات $dN_E$ بطاقة بين $E$ و $E+dE$: $$ dN_E = g(E) \\frac{1}{e^{E/kT} - 1} dE $$ حيث $E=h\\nu$ (طاقة الفوتون). كثافة طاقة الإشعاع $u(\\nu)d\\nu$ لتردد بين $\\nu$ و $\\nu+d\\nu$: $$ u(\\nu)d\\nu = \\frac{8\\pi h \\nu^3}{c^3} \\frac{1}{e^{h\\nu/kT} - 1} d\\nu $$",
+                parameters: [
+                    { symbol: "$h\\nu$", explanation: "طاقة الفوتون، حيث $h$ ثابت بلانك و $\\nu$ التردد." },
+                    { symbol: "$c$", explanation: "سرعة الضوء." },
+                    { symbol: "$u(\\nu)d\\nu$", explanation: "كثافة الطاقة الإشعاعية لكل وحدة تردد." }
+                ],
+                analogy_title: "🧠 الربط الذهني: ألوان الطيف من جسم ساخن",
+                analogy_text: "تخيل قطعة حديد تسخن. في البداية لا ترى أي ضوء. ثم تبدأ في الاحمرار (فوتونات ذات طاقة منخفضة/تردد منخفض). كلما زادت سخونتها، تصبح برتقالية ثم صفراء ثم بيضاء (فوتونات ذات طاقة أعلى/ترددات أعلى). قانون توزيع الفوتونات (قانون بلانك) يصف بالضبط 'كمية' كل لون (تردد) من الضوء تنبعث عند درجة حرارة معينة.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> (تصور بياني لمنحنى إشعاع الجسم الأسود سيكون مناسباً هنا) <br> يوضح كيف تتغير شدة الإشعاع مع التردد/الطول الموجي عند درجات حرارة مختلفة. </div>`
+            },
+            // Definitions 26-28 (Thermodynamics laws, Heat Capacities)
+            {
+                id: "first-law-thermo",
+                title: "26. القانون الأول للديناميكا الحرارية (First law of thermodynamic)",
+                definition: "هو قانون حفظ الطاقة. ينص على أن التغير في الطاقة الداخلية لنظام $(\\Delta U)$ يساوي كمية الحرارة $(Q)$ المضافة إلى النظام مطروحًا منها الشغل $(W)$ الذي يبذله النظام على محيطه.",
+                relation: "$$ \\Delta U = Q - W $$  أو بصيغة تفاضلية: $$ dU = dQ - dW $$",
+                parameters: [
+                    { symbol: "$\\Delta U$ أو $dU$", explanation: "التغير في الطاقة الداخلية للنظام." },
+                    { symbol: "$Q$ أو $dQ$", explanation: "كمية الحرارة المضافة إلى النظام (موجبة) أو المأخوذة منه (سالبة)." },
+                    { symbol: "$W$ أو $dW$", explanation: "الشغل الذي يبذله النظام على محيطه (موجب) أو الشغل المبذول على النظام من محيطه (سالب)." }
+                ],
+                analogy_title: "🧠 الربط الذهني: ميزانية حسابك البنكي (مرة أخرى!)",
+                analogy_text: "تخيل أن الطاقة الداخلية هي رصيدك في البنك. التغير في رصيدك $(\\Delta U)$ يساوي بالضبط الأموال التي أودعتها (الحرارة المضافة Q) ناقص الأموال التي سحبتها أو صرفتها (الشغل المبذول W). لا يمكن للطاقة (المال) أن تظهر من العدم أو تختفي. هذا القانون هو أساس كل تحولات الطاقة.",
+                visualization_html: `
+                    <div class="text-center p-4 border border-dashed border-orange-400 rounded-lg bg-orange-50">
+                        <p class="text-lg"> النظام (مثل محرك سيارة) <span class="text-2xl">🚗</span> </p>
+                        <p class="text-green-600 font-semibold mt-2">+ حرارة داخلة (Q) <span class="text-xl">🔥</span> (وقود يحترق)</p>
+                        <p class="text-red-600 font-semibold mt-1">- شغل خارج (W) <span class="text-xl">💨</span> (حركة السيارة)</p>
+                        <p class="text-2xl font-bold my-2 text-orange-600">=</p>
+                        <p class="text-blue-600 font-semibold">تغير في الطاقة الداخلية ($\Delta U$) <span class="text-xl">🔋</span> (سخونة المحرك أو تغير حالته)</p>
+                    </div>
+                `
+            },
+            {
+                id: "heat-capacity-V",
+                title: "27. السعة الحرارية عند حجم ثابت ($C_V$)",
+                definition: "هي كمية الحرارة اللازمة لرفع درجة حرارة النظام درجة مئوية واحدة (أو كلفن واحد) مع إبقاء حجم النظام ثابتاً. رياضياً، هي مشتقة الطاقة الداخلية بالنسبة لدرجة الحرارة عند حجم ثابت.",
+                relation: "$$ C_V = \\left( \\frac{\\partial U}{\\partial T} \\right)_V $$",
+                parameters: [
+                    { symbol: "$C_V$", explanation: "السعة الحرارية عند حجم ثابت." },
+                    { symbol: "$U$", explanation: "الطاقة الداخلية للنظام." },
+                    { symbol: "$T$", explanation: "درجة الحرارة المطلقة." },
+                    { symbol: "$\\left( \\frac{\\partial ...}{\\partial T} \\right)_V$", explanation: "رمز المشتقة الجزئية بالنسبة لـ $T$ مع إبقاء الحجم $V$ ثابتاً." }
+                ],
+                analogy_title: "🧠 الربط الذهني: 'مقاومة' الوعاء للتسخين",
+                analogy_text: "تخيل أنك تسخن وعاءً مغلقاً بإحكام (حجم ثابت). $C_V$ تقيس مدى 'صعوبة' أو 'سهولة' رفع درجة حرارة ما بداخل الوعاء. مادة ذات $C_V$ عالية تحتاج كمية كبيرة من الحرارة لترتفع درجة حرارتها (مثل الماء)، بينما مادة ذات $C_V$ منخفضة تسخن بسرعة (مثل المعدن).",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> كلما زادت $C_V$ لمادة، احتاجت حرارة أكثر لتسخن بنفس المقدار. </div>`
+            },
+            {
+                id: "heat-capacity-P",
+                title: "28. السعة الحرارية عند ضغط ثابت ($C_P$)",
+                definition: "هي كمية الحرارة اللازمة لرفع درجة حرارة النظام درجة مئوية واحدة (أو كلفن واحد) مع إبقاء ضغط النظام ثابتاً. رياضياً، هي مشتقة الإنثالبي (H) بالنسبة لدرجة الحرارة عند ضغط ثابت.",
+                relation: "$$ C_P = \\left( \\frac{\\partial H}{\\partial T} \\right)_P $$  حيث الإنثالبي $H = U + PV$.",
+                parameters: [
+                    { symbol: "$C_P$", explanation: "السعة الحرارية عند ضغط ثابت." },
+                    { symbol: "$H$", explanation: "الإنثالبي (المحتوى الحراري)." },
+                    { symbol: "$U$", explanation: "الطاقة الداخلية." },
+                    { symbol: "$P$", explanation: "الضغط." },
+                    { symbol: "$V$", explanation: "الحجم." },
+                    { symbol: "$T$", explanation: "درجة الحرارة المطلقة." },
+                    { symbol: "$\\left( \\frac{\\partial ...}{\\partial T} \\right)_P$", explanation: "رمز المشتقة الجزئية بالنسبة لـ $T$ مع إبقاء الضغط $P$ ثابتاً." }
+                ],
+                analogy_title: "🧠 الربط الذهني: تسخين بالون (قابل للتمدد)",
+                analogy_text: "تخيل أنك تسخن بالوناً (الضغط بداخله ثابت تقريباً ويساوي الضغط الجوي). عندما تضيف حرارة، جزء منها يرفع درجة حرارة الهواء داخل البالون، والجزء الآخر يُستخدم في بذل شغل لتمديد البالون. لهذا السبب، تكون $C_P$ عادة أكبر من $C_V$ لنفس المادة، لأنك تحتاج لإضافة حرارة إضافية لتعويض الشغل المبذول في التمدد بالإضافة لرفع درجة الحرارة.",
+                visualization_html: `<div class="text-center p-2 text-sm text-slate-600"> عادةً $C_P > C_V$ لأن جزءاً من الحرارة يُستخدم في بذل شغل التمدد عند ضغط ثابت. </div>`
+            }
+        ];
+
+        const container = document.getElementById('definitions-container');
+
+        definitionsData.forEach(defData => {
+            const card = document.createElement('div');
+            card.className = 'concept-card';
+            card.id = `card-${defData.id}`;
+
+            let htmlContent = `
+                <h2 class="text-2xl sm:text-3xl font-black mb-3">${defData.title}</h2>
+                <div>
+                    <h3 class="text-xl font-bold text-sky-600 mb-1">التعريف العلمي:</h3>
+                    <p class="text-slate-700 mb-4 text-base leading-relaxed">${defData.definition}</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-sky-600 mb-1">العلاقة الرياضية:</h3>
+                    <div class="latex-formula text-lg p-3 my-2">${defData.relation}</div>
+                </div>
+            `;
+            
+            if (defData.parameters && defData.parameters.length > 0) {
+                htmlContent += `
+                <div>
+                    <h3 class="text-xl font-bold text-sky-600 mt-3 mb-1">شرح البارامترات في العلاقة:</h3>
+                    <div class="parameters-explanation">
+                        <ul>`;
+                defData.parameters.forEach(param => {
+                    htmlContent += `<li><strong>${param.symbol}</strong>: ${param.explanation}</li>`;
+                });
+                htmlContent += `
+                        </ul>
+                    </div>
+                </div>`;
+            }
+
+            if (defData.analogy_title && defData.analogy_text) {
+                htmlContent += `
+                <div class="mental-link mt-5">
+                    <h3 class="text-xl font-bold text-amber-600 mb-2">${defData.analogy_title}</h3>
+                    <p class="text-slate-700 text-base leading-relaxed">${defData.analogy_text}</p>
+                `;
+                if (defData.visualization_html) {
+                    htmlContent += `
+                        <div class="visualization-container mt-4">
+                            ${defData.visualization_html}
+                        </div>
+                    `;
+                }
+                htmlContent += `</div>`;
+            }
+            
+            card.innerHTML = htmlContent;
+            container.appendChild(card);
+
+            if (defData.init_function && typeof defData.init_function === 'function') {
+                try {
+                    defData.init_function(card);
+                } catch (e) {
+                    console.error(`Error initializing visualization for ${defData.id}:`, e);
+                }
+            }
+        });
+        
+        if (typeof MathJax !== "undefined" && MathJax.typesetPromise) {
+            MathJax.typesetPromise().catch(function (err) { console.error('MathJax typesetting error: ' + err.message); });
+        } else if (typeof MathJax !== "undefined") { // For older MathJax versions or if typesetPromise is not available
+             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }
+
+
+    </script>
+</body>
+</html>
